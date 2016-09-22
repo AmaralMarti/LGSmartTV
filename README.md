@@ -30,31 +30,45 @@ param = LGSmartTV.search()
 # ** Se não for localizada nenhuma Smart TV LG na rede "LGSmartTV.search()" retornará "None"
 
 if param:
-    Tv = LGSmartTV(param)     # Cria o objeto TV
-    Tv.display_pairing_key()  # Manda a TV exibir na tela a "pairing key" para poder parear com ela
-    Tv.pairing(000000)        # Faz o pareamento, passando como parametro a "pairing key" vista na tela
-                              #  -> Se você já tiver a "pairing key" pode pular o "display_pairing_key()"
+    # Cria o objeto TV passando "param" como parametros
+    # ** Se você já tem os parametros da TV pode pular o "LGSmartTV.search()"
+    Tv = LGSmartTV(param)     
+    
+    # Manda a TV exibir na tela a "pairing key" para poder parear com ela
+    Tv.display_pairing_key()  
+    
+    # Faz o pareamento, passando como parametro a "pairing key" vista na tela
+    #  -> Se você já tiver a "pairing key" pode pular o "display_pairing_key()"
+    Tv.pairing(000000)
+    
+    # Retorna um dicionário com os detalhes do canal atual da TV
+    channel = Tv.query.current_channel()
+    
+    # Retorna a lista de canais sintinizados na TV
+    channel_list = Tv.query.channel_list()
+    
+    # Retorna um dicionário com os detalhes do volume atual da TV
+    Tv.query.volume()
 
-    channel = Tv.query.current_channel()   # Retorna um dicionário com os detalhes do canal atual da TV
-    channel_list = Tv.query.channel_list() # Retorna a lista de canais sintinizados na TV
-    Tv.query.volume()                      # Retorna um dicionário com os detalhes do volume atual da TV
+    # Tira um print da tela da TV e salva a imagem no arquivo indicado
+    Tv.query.screen_capture(os.path.expanduser('~/tela.jpg')) 
 
-    Tv.query.screen_capture(os.path.expanduser('~/tela.jpg')) # Tira um print da tela da TV e salva no 
-                                                              # arquivo passado como parâmetro
+    # Retorna o modo de operação atual da TV
+    #   0 => modo controle remoto
+    #   1 => modo touchpad 
+    Tv.query.operation_mode()
 
-    Tv.query.operation_mode() # Retorna o modo de operação atual da TV
-                              # 0 => controle remoto
-                              # 1 => touchpad 
-
-    aplicativos = Tv.query.app_list()  # Retorna uma lista de dicioários com os dados 
-                                       # dos aplicativos instalados na TV
+    # Retorna uma lista de dicionários com os dados dos aplicativos instalados na TV
+    aplicativos = Tv.query.app_list()  
 
     # Faz o download do icone do aplicativo passado como parâmetro e salva a imagem no arquivo indicado
     for aplicativo in aplicativos:
         Tv.query.app_icon(aplicativo['auid'], os.path.expanduser('~/' + aplicativo['name'] + '.png'))
 
-    Tv.query.app_count(1) # Retorna o número de aplicativos da categoria passada como parâmetro
-                          # Categorias :1 = All apps
-                          #             2 = Premium
-                          #             3 = My Apps
+    # Retorna o número de aplicativos da categoria passada como parâmetro
+    # Categorias :1 = All apps
+    #             2 = Premium
+    #             3 = My Apps
+    Tv.query.app_count(1) 
+
 ```
